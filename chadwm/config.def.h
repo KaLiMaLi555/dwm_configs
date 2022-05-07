@@ -17,8 +17,8 @@ static const int systraypinningfailfirst = 1;   /* 1: if pinning fails,display s
 static const int showsystray        = 1;        /* 0 means no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int showtab            = showtab_auto;
-static const int toptab             = 1;        /* 0 means bottom tab */
-static const int topbar             = 1;        /* 0 means bottom bar */
+static const int toptab             = 0;        /* 0 means bottom tab */
+static const int topbar             = 0;        /* 0 means bottom bar */
 static const int horizpadbar        = 5;
 static const int vertpadbar         = 11;
 static const int vertpadtab         = 33;
@@ -30,40 +30,51 @@ static const int colorfultag        = 1;        /* 0 means use SchemeSel for sel
 
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:style:medium:size=10",
                                         "Material Design Icons-Regular:size=10" };
-
 // theme
 #include "themes/onedark.h"
+#include "themes/custom.h"
 
 static const char *colors[][3]      = {
     /*                     fg       bg      border */
-    [SchemeNorm]       = { gray3,   black,  gray2 },
+    [SchemeNorm]       = { color1,   color4,  color3 },
     [SchemeSel]        = { gray4,   blue,   blue  },
-    [TabSel]           = { blue,    gray2,  black },
-    [TabNorm]          = { gray3,   black,  black },
-    [SchemeTag]        = { gray3,   black,  black },
-    [SchemeTag1]       = { blue,    black,  black },
-    [SchemeTag2]       = { red,     black,  black },
-    [SchemeTag3]       = { orange,  black,  black },
-    [SchemeTag4]       = { green,   black,  black },
-    [SchemeTag5]       = { pink,    black,  black },
-    [SchemeLayout]     = { green,   black,  black },
-    [SchemeBtnPrev]    = { green,   black,  black },
-    [SchemeBtnNext]    = { yellow,  black,  black },
-    [SchemeBtnClose]   = { red,     black,  black },
+    [TabSel]           = { blue,    gray2,  color4 },
+    [TabNorm]          = { gray3,   color4,  color4 },
+    [SchemeTag]        = { gray3,   color4,  color4 },
+    [SchemeTag1]       = { color1,    color4,  color3 },
+    [SchemeTag2]       = { color1,     color4,  color3 },
+    [SchemeTag3]       = { color1,  color4,  color3 },
+    [SchemeTag4]       = { color1,   color4,  color3 },
+    [SchemeTag5]       = { color1,    color4,  color3 },
+    [SchemeTag6]       = { color1,    color4,  color3 },
+    [SchemeTag7]       = { color1,     color4,  color3 },
+    [SchemeTag8]       = { color1,  color4,  color3 },
+    [SchemeTag9]       = { color1,   color4,  color3 },
+    [SchemeTag0]       = { color1,    color4,  color3 },
+    [SchemeLayout]     = { color3,   color4,  color4 },
+    [SchemeBtnPrev]    = { green,   color4,  color4 },
+    [SchemeBtnNext]    = { yellow,  color4,  color4 },
+    [SchemeBtnClose]   = { red,     color4,  color4 },
 };
 
 /* tagging */
-static char *tags[] = {"", "", "", "", ""};
+// static char *tags[] = {"", "", "", "", ""};
+static char *tags[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
-static const char* eww[] = { "eww", "open" , "eww", NULL };
+// static const char* rofi[] = { "rofi", "-show" , "drun", NULL };
+static const char* rofi[] = { "rofi", "-no-lazy-grab", "-show" , "drun", "-modi", "drun", "-theme", ".config/rofi/launchers/misc/blurry_full", NULL };
+static const char* rofi_powermenu[] = { "/bin/sh", "-c", "~/.config/rofi/bin/powermenu", NULL };
+static const char* rofi_network[] = { "/bin/sh", "-c", "~/.config/rofi/bin/applet_network", NULL };
 
 static const Launcher launchers[] = {
     /* command     name to display */
-    { eww,         "" },
+    { rofi,         "Apps" },
+    { rofi_powermenu,         "Powermenu" },
+    { rofi_network,         "Network" },
 };
 
 static const int tagschemes[] = {
-    SchemeTag1, SchemeTag2, SchemeTag3, SchemeTag4, SchemeTag5
+    SchemeTag1, SchemeTag2, SchemeTag3, SchemeTag4, SchemeTag5, SchemeTag6, SchemeTag7, SchemeTag8, SchemeTag9, SchemeTag0,
 };
 
 static const unsigned int ulinepad      = 5; /* horizontal padding between the underline and tag */
@@ -79,8 +90,13 @@ static const Rule rules[] = {
     /* class      instance    title       tags mask     iscentered   isfloating   monitor */
     { "Gimp",     NULL,       NULL,       0,            0,           1,           -1 },
     { "Firefox",  NULL,       NULL,       1 << 8,       0,           0,           -1 },
-    { "eww",      NULL,       NULL,       0,            0,           1,           -1 },
+    { "Rofi",      NULL,       NULL,       0,            1,           1,           -1 },
+    { "Viewnior",      NULL,       NULL,       0,            1,           1,           -1 },
+    { "Nitrogen",      NULL,       NULL,       0,            1,           1,           -1 },
+    { "Terminator",      NULL,       NULL,       0,            1,           1,           -1 },
+    { "Blueman-manager",      NULL,       NULL,       0,            1,           1,           -1 },
 };
+
 
 /* layout(s) */
 static const float mfact     = 0.50; /* factor of master area size [0.05..0.95] */
@@ -95,8 +111,8 @@ static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen win
 static const Layout layouts[] = {
     /* symbol     arrange function */
     { "[]=",      tile },    /* first entry is default */
-    { "[M]",      monocle },
     { "[@]",      spiral },
+    { "[M]",      monocle },
     { "[\\]",     dwindle },
     { "H[]",      deck },
     { "TTT",      bstack },
@@ -118,8 +134,9 @@ static const Layout layouts[] = {
     { MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
     { MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
 
-/* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
+static const char *alacritty[]      = { "/usr/local/bin/alacritty", NULL};
+/* helper for spawning shell commands in the pre dwm-5.0 fashion */
 
 /* commands */
 
@@ -130,18 +147,17 @@ static Key keys[] = {
     {0,                     XF86XK_AudioMute,       spawn,          SHCMD("pamixer -t")},
     {0,              XF86XK_AudioRaiseVolume,       spawn,          SHCMD("pamixer -i 5")},
     {0,              XF86XK_AudioLowerVolume,       spawn,          SHCMD("pamixer -d 5")},
-    {0,              XF86XK_MonBrightnessDown,      spawn,          SHCMD("xbacklight -dec 5")},
-    {0,              XF86XK_MonBrightnessUp,        spawn,          SHCMD("xbacklight -inc 5")},
+    {0,              XF86XK_MonBrightnessDown,      spawn,          SHCMD("~/.config/dwm_config/set_brightness.sh -dec 10000")},
+    {0,              XF86XK_MonBrightnessUp,        spawn,          SHCMD("~/.config/dwm_config/set_brightness.sh -inc 10000")},
 
     // screenshot fullscreen and cropped
-    {MODKEY|ControlMask,                XK_u,       spawn,
-        SHCMD("maim | xclip -selection clipboard -t image/png")},
-    {MODKEY,                            XK_u,       spawn,
-        SHCMD("maim --select | xclip -selection clipboard -t image/png")},
+    {MODKEY|ControlMask,                XK_u,       spawn,          SHCMD("~/.config/dwm_config/window_ss.sh --full")},
+    {MODKEY,                            XK_u,       spawn,          SHCMD("~/.config/dwm_config/window_ss.sh --crop")},
 
 
-    { MODKEY,                           XK_c,       spawn,          SHCMD("rofi -show drun") },
-    { MODKEY,                           XK_Return,  spawn,          SHCMD("st")},
+    { MODKEY,                           XK_d,       spawn,          {.v = rofi} },
+    { MODKEY,                           XK_Return,       spawn,          SHCMD("~/.config/rofi/bin/powermenu") },
+    { Mod1Mask|ControlMask,             XK_t,  spawn,          {.v = alacritty}},
     // { MODKEY,                           XK_Return, spawn,            SHCMD("st_pad && st")},
     
 
@@ -155,7 +171,7 @@ static Key keys[] = {
     { MODKEY,                           XK_j,       focusstack,     {.i = +1 } },
     { MODKEY,                           XK_k,       focusstack,     {.i = -1 } },
     { MODKEY,                           XK_i,       incnmaster,     {.i = +1 } },
-    { MODKEY,                           XK_d,       incnmaster,     {.i = -1 } },
+    { MODKEY,                           XK_c,       incnmaster,     {.i = -1 } },
 
     // change m,cfact sizes 
     { MODKEY,                           XK_h,       setmfact,       {.f = -0.05} },
